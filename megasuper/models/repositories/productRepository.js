@@ -7,6 +7,15 @@ export class ProductRepository {
     findAll() {
       return this.productos;
     }
+
+    findByPage(pageNum, limitNum) {
+      const offset = (pageNum - 1) * limitNum;
+      return this.productos.slice(offset, offset + limitNum);
+    }
+    
+    countAll() {
+      return this.productos.length;
+    }
   
     findById(id) {
       return this.productos.find(p => p.id === id);

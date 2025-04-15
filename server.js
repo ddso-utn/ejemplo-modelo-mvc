@@ -30,6 +30,7 @@ export class Server {
         this.app.post("/products", (req, res) => this.getController(ProductController).create(req,res));
         this.app.delete("/products/:id", (req, res) => this.getController(ProductController).delete(req,res));
         this.app.put("/products/:id", (req, res) => this.getController(ProductController).update(req,res));
+        this.app.post("/products/batch", (req, res) => this.getController(ProductController).createMany(req,res));
     }
 
     launch() {

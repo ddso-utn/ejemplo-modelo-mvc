@@ -6,14 +6,30 @@ export class ProductService {
     this.productRepository = productRepository;
   }
 
-  findAll(price_lt = null) {
-    let productos = this.productRepository.findAll();
-    if (price_lt) {
-      const max = Number(price_lt);
+  findAll({ price_lt = null, page = 1, limit = 10 }) {
+    const max = price_lt !== null ? Number(price_lt) : null;
+    const pageNum = Math.max(Number(page), 1);
+    const limitNum = Math.min(Math.max(Number(limit), 1), 100);
+  
+    let productos = this.productRepository.findByPage(pageNum, limitNum);
+  
+    if (max !== null) {
       productos = productos.filter(p => p.precioBase < max);
     }
-    return productos.map(p => this.toDTO(p));
+
+    const total = this.productRepository.countAll();
+    const total_pages = Math.ceil(total / limitNum);
+  
+    const data = productos.map(p => this.toDTO(p));  
+    return {
+      page: pageNum,
+      per_page: limitNum,
+      total: total,
+      total_pages: total_pages,
+      data: data,
+    };
   }
+  
 
   findById(id) {
     const producto = this.productRepository.findById(id);
