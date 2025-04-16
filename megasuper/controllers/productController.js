@@ -20,17 +20,18 @@ export class ProductController {
     };
   
     create = (req, res) => {
-      const { nombre, precioBase, descripcion } = req.body;
-  
+      const producto = req.body;
+      const { nombre, precioBase, descripcion } = producto;
+    
       if (!nombre || !descripcion || typeof precioBase !== "number") {
         return res.status(400).json({ error: "Datos inválidos" });
       }
-  
-      const nuevo = this.productService.create(nombre, precioBase, descripcion);
+    
+      const nuevo = this.productService.create(producto);
       if (!nuevo) {
         return res.status(409).json({ error: "Producto ya existente" });
       }
-  
+    
       res.status(201).json(nuevo);
     };
   
@@ -43,21 +44,5 @@ export class ProductController {
       res.status(204).send();
     };
   
-    update = (req, res) => {
-      const id = Number(req.params.id);
-      const { nombre, precioBase, descripcion } = req.body;
-  
-      const actualizado = this.productService.update(id, { nombre, precioBase, descripcion });
-  
-      if (actualizado.error === "not-found") {
-        return res.status(404).json({ error: "Producto no encontrado" });
-      }
-  
-      if (actualizado.error === "duplicate") {
-        return res.status(409).json({ error: "Nombre en uso por otro producto" });
-      }
-  
-      res.json(actualizado);
-    };
   }
   

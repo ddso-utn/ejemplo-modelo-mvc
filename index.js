@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config(); 
+
 import express from "express";
 import { Server } from "./server.js";
 
@@ -6,6 +9,7 @@ import { ProductService } from "./megasuper/services/productService.js";
 import { ProductController } from "./megasuper/controllers/productController.js";
 
 const app = express();
+const port = process.env.PORT || 3000;
 const server = new Server(app, 3000);
 
 // Configuración de dependencias

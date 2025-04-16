@@ -1,5 +1,4 @@
 import { Producto } from "../models/entities/Producto.js";
-import { ProductRepository } from "../models/repositories/productRepository.js"; 
 
 export class ProductService {
   constructor(productRepository) {
@@ -20,34 +19,20 @@ export class ProductService {
     return producto ? this.toDTO(producto) : null;
   }
 
-  create(nombre, precioBase, descripcion) {
+  create(producto) {
+    const { nombre, precioBase, descripcion } = producto;
+  
     const existente = this.productRepository.findByName(nombre);
     if (existente) return null;
-
+  
     const nuevo = new Producto(nombre, precioBase, descripcion);
+  
     this.productRepository.save(nuevo);
     return this.toDTO(nuevo);
   }
 
   delete(id) {
     return this.productRepository.deleteById(id);
-  }
-
-  update(id, datos) {
-    const producto = this.productRepository.findById(id);
-    if (!producto) return { error: "not-found" };
-
-    const otroConMismoNombre = this.productRepository.findByName(datos.nombre);
-    if (otroConMismoNombre && otroConMismoNombre.id !== id) {
-      return { error: "duplicate" };
-    }
-
-    producto.nombre = datos.nombre;
-    producto.precioBase = datos.precioBase;
-    producto.descripcion = datos.descripcion;
-
-    const actualizado = this.productRepository.update(producto);
-    return this.toDTO(actualizado);
   }
 
   toDTO(producto) {

@@ -29,11 +29,5 @@ export class ProductRepository {
       return true;
     }
   
-    update(producto) {
-      const index = this.productos.findIndex(p => p.id === producto.id);
-      if (index === -1) return null;
-      this.productos[index] = producto;
-      return producto;
-    }
   }
   
