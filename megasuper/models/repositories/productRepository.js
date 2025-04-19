@@ -9,18 +9,18 @@ export class ProductRepository {
     const data = await fs.readFile(ProductRepository.productsPath)
     const dataObjects = JSON.parse(data)
     const productos = mapToProducts(dataObjects)
-    return productos;
+    return productos
   }
 
   async findByPage(pageNum, limitNum) {
     const productos = await this.findAll()
-    const offset = (pageNum - 1) * limitNum;
-    return productos.slice(offset, offset + limitNum);
+    const offset = (pageNum - 1) * limitNum
+    return productos.slice(offset, offset + limitNum)
   }
 
   async countAll() {
     const prods = await this.findAll()
-    return prods.length;
+    return prods.length
   }
 
   async findById(id) {
@@ -37,31 +37,31 @@ export class ProductRepository {
 
   async save(producto) {
     const prods = await this.findAll()
-    producto.id = prods.length +1;
+    producto.id = prods.length +1
     prods.push(producto)
     const dataObjects = mapToDataObjects(prods)
     await fs.writeFile(ProductRepository.productsPath, JSON.stringify(dataObjects))
-    return producto;
+    return producto
   }
 
   async deleteById(id) {
     const productos = await this.findAll()
     const index = productos.findIndex(p => p.id === id)
-    if (index === -1) return false;
-    productos.splice(index, 1);
+    if (index === -1) return false
+    productos.splice(index, 1)
     const dataObjects = mapToDataObjects(productos)
     await fs.writeFile(ProductRepository.productsPath, JSON.stringify(dataObjects))
-    return true;
+    return true
   }
 
   async update(producto) {
     const productos = await this.findAll() 
-    const index = productos.findIndex(p => p.id === producto.id);
-    if (index === -1) return null;
-    productos[index] = producto;
+    const index = productos.findIndex(p => p.id === producto.id)
+    if (index === -1) return null
+    productos[index] = producto
     const dataObjects = mapToDataObjects(productos)
     await fs.writeFile(ProductRepository.productsPath, JSON.stringify(dataObjects))
-    return producto;
+    return producto
   }
 }
 
