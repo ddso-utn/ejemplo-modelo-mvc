@@ -4,6 +4,7 @@ import { ProductController } from "./megasuper/controllers/productController.js"
 export class Server {
 
     #controllers = {}
+    #routes = []
     #app
 
     constructor(app, port = 3000) {
@@ -25,12 +26,14 @@ export class Server {
     }
 
     configureRoutes() {
-        this.app.get("/products", (req, res) => this.getController(ProductController).findAll(req,res));
-        this.app.get("/products/:id", (req, res) => this.getController(ProductController).findById(req,res));
-        this.app.post("/products", (req, res) => this.getController(ProductController).create(req,res));
-        this.app.delete("/products/:id", (req, res) => this.getController(ProductController).delete(req,res));
-        this.app.put("/products/:id", (req, res) => this.getController(ProductController).update(req,res));
-        this.app.post("/products/batch", (req, res) => this.getController(ProductController).createMany(req,res));
+       this.#routes.forEach(route => {
+            const router = route(this.getController.bind(this))
+            this.#app.use(router)
+        })
+    }
+
+    addRoute(route) {
+        this.#routes.push(route)
     }
 
     launch() {
