@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "node --watch index.js",
     "integration-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./test/integration"
   },
   "keywords": [],
@@ -19,7 +19,6 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "nodemon": "^3.1.9",
     "supertest": "^7.1.0"
   }
 }

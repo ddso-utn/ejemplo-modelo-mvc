@@ -1,23 +1,28 @@
 import { ProductController } from "../controllers/productController.js";
+import express from 'express'
 
-export function registerProductRoutes(app, getController) {
-  app.get("/products", (req, res) =>
+export default function productRoutes(getController) {
+  const router = express.Router()
+
+  router.get("/products", (req, res) =>
     getController(ProductController).findAll(req, res)
   );
 
-  app.get("/products/:id", (req, res) =>
+  router.get("/products/:id", (req, res) =>
     getController(ProductController).findById(req, res)
   );
 
-  app.post("/products", (req, res) =>
+  router.post("/products", (req, res) =>
     getController(ProductController).create(req, res)
   );
 
-  app.delete("/products/:id", (req, res) =>
+  router.delete("/products/:id", (req, res) =>
     getController(ProductController).delete(req, res)
   );
 
-  app.put("/products/:id", (req, res) =>
+  router.put("/products/:id", (req, res) =>
     getController(ProductController).update(req, res)
   );
+
+  return router
 }
