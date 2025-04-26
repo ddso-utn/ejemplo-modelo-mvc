@@ -1,7 +1,9 @@
 import productRoutes from "./productRoutes.js"
+import { swaggerRoutes } from "./swaggerRoutes.js"
 
 const routes = [
-    productRoutes
+    productRoutes,
+    swaggerRoutes
 ]
 
 export default routes

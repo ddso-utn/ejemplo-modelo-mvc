@@ -1,4 +1,5 @@
-import { Producto } from "../models/entities/Producto.js";
+import { ProductAlreadyExistsError } from "../exceptions/productAlreadyExists.js";
+import { Producto } from "../models/entities/producto.js";
 
 export class ProductService {
   constructor(productRepository) {
@@ -37,7 +38,9 @@ export class ProductService {
 
   async create(nombre, precioBase, descripcion) {
     const existente = await this.productRepository.findByName(nombre)
-    if (existente) return null
+    if (existente) {
+      throw new ProductAlreadyExistsError(nombre)
+    }
 
     const nuevo = new Producto(nombre, precioBase, descripcion)
     await this.productRepository.save(nuevo)

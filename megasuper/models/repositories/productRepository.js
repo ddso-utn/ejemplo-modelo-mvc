@@ -1,6 +1,7 @@
 import path from "node:path"
 import fs from "node:fs/promises"
 import { Producto } from "../entities/producto.js"
+import { ProductNotFoundError } from "../../exceptions/productNotFound.js"
 
 export class ProductRepository {
   static productsPath = path.join("data", "productos.json")
@@ -26,6 +27,7 @@ export class ProductRepository {
   async findById(id) {
     const prods = await this.findAll()
     const producto = prods.find(p => p.id === id)
+    if (!producto) { throw new ProductNotFoundError(id) }
     return producto
   }
 
@@ -47,7 +49,7 @@ export class ProductRepository {
   async deleteById(id) {
     const productos = await this.findAll()
     const index = productos.findIndex(p => p.id === id)
-    if (index === -1) return false
+    if (index === -1) throw new ProductNotFoundError(id)
     productos.splice(index, 1)
     const dataObjects = mapToDataObjects(productos)
     await fs.writeFile(ProductRepository.productsPath, JSON.stringify(dataObjects))

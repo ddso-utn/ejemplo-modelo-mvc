@@ -1,28 +1,55 @@
 import { ProductController } from "../controllers/productController.js";
 import express from 'express'
+import { productsErrorHandler } from "../middlewares/productsMiddleware.js";
 
 export default function productRoutes(getController) {
   const router = express.Router()
 
-  router.get("/products", (req, res) =>
-    getController(ProductController).findAll(req, res)
+  router.get("/products", async (req, res, next) => {
+    try {
+      getController(ProductController).findAll(req, res)
+    } catch (error) {
+      next(error)
+    }
+  }
   );
 
-  router.get("/products/:id", (req, res) =>
-    getController(ProductController).findById(req, res)
+  router.get("/products/:id", async (req, res, next) => {
+    try {
+      await getController(ProductController).findById(req, res)
+    } catch (err) {
+      next(err)
+    }
+  }
   );
 
-  router.post("/products", (req, res) =>
-    getController(ProductController).create(req, res)
+  router.post("/products", async (req, res, next) => {
+    try {
+      await getController(ProductController).create(req, res)
+    } catch (err) {
+      next(err)
+    }
+  }
   );
 
-  router.delete("/products/:id", (req, res) =>
-    getController(ProductController).delete(req, res)
+  router.delete("/products/:id", async (req, res, next) => {
+    try {
+      await getController(ProductController).delete(req, res)
+    } catch (err) {
+      next(err)
+    }
+  });
+
+  router.put("/products/:id", async (req, res, next) => {
+    try {
+      await getController(ProductController).update(req, res)
+    } catch (err) {
+      next(err)
+    }
+  }
   );
 
-  router.put("/products/:id", (req, res) =>
-    getController(ProductController).update(req, res)
-  );
+  router.use(productsErrorHandler)
 
   return router
 }
