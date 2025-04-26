@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "node --watch index.js",
     "integration-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./test/integration"
   },
   "keywords": [],
@@ -13,13 +13,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "nodemon": "^3.1.9",
     "supertest": "^7.1.0"
   }
 }
