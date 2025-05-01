@@ -1,1 +1,4 @@
-[{"id":1,"nombre":"Aceite","descripcion":"2lts","precioBase":3000}]
+[
+  { "id": 2, "nombre": "Harina", "descripcion": "1lt", "precioBase": 400 },
+  { "id": 3, "nombre": "Harinaa", "descripcion": "1lt", "precioBase": 400 }
+]

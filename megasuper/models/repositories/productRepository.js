@@ -26,43 +26,54 @@ export class ProductRepository {
 
   async findById(id) {
     const prods = await this.findAll()
-    const producto = prods.find(p => p.id === id)
-    if (!producto) { throw new ProductNotFoundError(id) }
+    const producto = prods.find((p) => p.id === id)
+    if (!producto) {
+      throw new ProductNotFoundError(id)
+    }
     return producto
   }
 
   async findByName(nombre) {
     const prods = await this.findAll()
-    const producto = prods.find(p => p.nombre === nombre)
+    const producto = prods.find((p) => p.nombre === nombre)
     return producto
   }
 
   async save(producto) {
     const prods = await this.findAll()
-    producto.id = prods.length +1
+    producto.id = prods.length + 1
     prods.push(producto)
     const dataObjects = mapToDataObjects(prods)
-    await fs.writeFile(ProductRepository.productsPath, JSON.stringify(dataObjects))
+    await fs.writeFile(
+      ProductRepository.productsPath,
+      JSON.stringify(dataObjects),
+    )
     return producto
   }
 
   async deleteById(id) {
     const productos = await this.findAll()
-    const index = productos.findIndex(p => p.id === id)
+    const index = productos.findIndex((p) => p.id === id)
     if (index === -1) throw new ProductNotFoundError(id)
     productos.splice(index, 1)
     const dataObjects = mapToDataObjects(productos)
-    await fs.writeFile(ProductRepository.productsPath, JSON.stringify(dataObjects))
+    await fs.writeFile(
+      ProductRepository.productsPath,
+      JSON.stringify(dataObjects),
+    )
     return true
   }
 
   async update(producto) {
-    const productos = await this.findAll() 
-    const index = productos.findIndex(p => p.id === producto.id)
+    const productos = await this.findAll()
+    const index = productos.findIndex((p) => p.id === producto.id)
     if (index === -1) return null
     productos[index] = producto
     const dataObjects = mapToDataObjects(productos)
-    await fs.writeFile(ProductRepository.productsPath, JSON.stringify(dataObjects))
+    await fs.writeFile(
+      ProductRepository.productsPath,
+      JSON.stringify(dataObjects),
+    )
     return producto
   }
 }
@@ -84,7 +95,7 @@ function mapToDataObject(producto) {
     id: producto.id,
     nombre,
     descripcion,
-    precioBase
+    precioBase,
   }
 }
 

@@ -1,6 +1,6 @@
-import { ProductController } from "../controllers/productController.js";
-import express from 'express'
-import { productsErrorHandler } from "../middlewares/productsMiddleware.js";
+import { ProductController } from "../controllers/productController.js"
+import express from "express"
+import { productsErrorHandler } from "../middlewares/productsMiddleware.js"
 
 export default function productRoutes(getController) {
   const router = express.Router()
@@ -11,8 +11,7 @@ export default function productRoutes(getController) {
     } catch (error) {
       next(error)
     }
-  }
-  );
+  })
 
   router.get("/products/:id", async (req, res, next) => {
     try {
@@ -20,8 +19,7 @@ export default function productRoutes(getController) {
     } catch (err) {
       next(err)
     }
-  }
-  );
+  })
 
   router.post("/products", async (req, res, next) => {
     try {
@@ -29,8 +27,7 @@ export default function productRoutes(getController) {
     } catch (err) {
       next(err)
     }
-  }
-  );
+  })
 
   router.delete("/products/:id", async (req, res, next) => {
     try {
@@ -38,7 +35,7 @@ export default function productRoutes(getController) {
     } catch (err) {
       next(err)
     }
-  });
+  })
 
   router.put("/products/:id", async (req, res, next) => {
     try {
@@ -46,8 +43,7 @@ export default function productRoutes(getController) {
     } catch (err) {
       next(err)
     }
-  }
-  );
+  })
 
   router.use(productsErrorHandler)
 

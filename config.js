@@ -1,5 +1,5 @@
-import 'dotenv/config'
+import "dotenv/config"
 
 export const config = {
-    SERVER_PORT: process.env.SERVER_PORT
+  SERVER_PORT: process.env.SERVER_PORT,
 }

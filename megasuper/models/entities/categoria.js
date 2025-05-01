@@ -1,29 +1,29 @@
 export class Categoria {
-    #id
-    #nombre
-    #productos = []
+  #id
+  #nombre
+  #productos = []
 
-    constructor(nombre) {
-        this.#nombre = nombre
-    }
+  constructor(nombre) {
+    this.#nombre = nombre
+  }
 
-    agregarProducto(p) {
-        this.#productos.push(p)
-    }
+  agregarProducto(p) {
+    this.#productos.push(p)
+  }
 
-    get nombre() {
-        return this.#nombre
-    }
+  get nombre() {
+    return this.#nombre
+  }
 
-    get productos() {
-        return this.#productos
-    }
+  get productos() {
+    return this.#productos
+  }
 
-    set id(id) {
-        this.#id = id
-    }
+  set id(id) {
+    this.#id = id
+  }
 
-    get id() {
-        return this.#id
-    }
+  get id() {
+    return this.#id
+  }
 }

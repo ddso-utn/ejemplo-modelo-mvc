@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "integration-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./test/integration"
+    "unit-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./test/unit",
+    "integration-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./test/integration",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +21,10 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@stylistic/eslint-plugin-js": "^4.2.0",
+    "eslint": "^9.25.1",
+    "globals": "^16.0.0",
     "jest": "^29.7.0",
     "supertest": "^7.1.0"
   }

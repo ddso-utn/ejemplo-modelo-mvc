@@ -1,5 +1,5 @@
-import { ProductAlreadyExistsError } from "../exceptions/productAlreadyExists.js";
-import { Producto } from "../models/entities/producto.js";
+import { ProductAlreadyExistsError } from "../exceptions/productAlreadyExists.js"
+import { Producto } from "../models/entities/producto.js"
 
 export class ProductService {
   constructor(productRepository) {
@@ -14,13 +14,13 @@ export class ProductService {
     let productos = await this.productRepository.findByPage(pageNum, limitNum)
 
     if (max !== null) {
-      productos = productos.filter(p => p.precioBase < max)
+      productos = productos.filter((p) => p.precioBase < max)
     }
 
     const total = await this.productRepository.countAll()
     const total_pages = Math.ceil(total / limitNum)
 
-    const data = productos.map(p => this.toDTO(p))
+    const data = productos.map((p) => this.toDTO(p))
     return {
       page: pageNum,
       per_page: limitNum,
@@ -29,7 +29,6 @@ export class ProductService {
       data: data,
     }
   }
-
 
   async findById(id) {
     const producto = await this.productRepository.findById(id)
@@ -55,7 +54,9 @@ export class ProductService {
     const producto = await this.productRepository.findById(id)
     if (!producto) return { error: "not-found" }
 
-    const otroConMismoNombre = await this.productRepository.findByName(datos.nombre)
+    const otroConMismoNombre = await this.productRepository.findByName(
+      datos.nombre,
+    )
     if (otroConMismoNombre && otroConMismoNombre.id !== id) {
       return { error: "duplicate" }
     }
@@ -73,7 +74,7 @@ export class ProductService {
       id: producto.id,
       nombre: producto.nombre,
       precioBase: producto.precioBase,
-      descripcion: producto.descripcion
+      descripcion: producto.descripcion,
     }
   }
 }
