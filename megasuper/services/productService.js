@@ -1,38 +1,59 @@
 import { Producto } from "../models/entities/Producto.js";
+import { NotFoundError, ValidationError, ConflictError } from "../errors/AppError.js";
 
 export class ProductService {
-  constructor(productRepository) {
+  constructor(productRepository, categoryRepository) {
     this.productRepository = productRepository;
+    this.categoryRepository = categoryRepository;
   }
 
-  findAll(price_lt = null) {
-    let productos = this.productRepository.findAll();
-    if (price_lt) {
-      const max = Number(price_lt);
-      productos = productos.filter(p => p.precioBase < max);
+  async findAll(filters = {}) {
+    const productos = await this.productRepository.findAll(filters);
+    return productos.map(producto => this.toDTO(producto));
+  }
+
+  async findById(id) {
+    const producto = await this.productRepository.findById(id);
+    if (!producto) {
+      throw new NotFoundError(`Producto con id ${id} no encontrado`);
     }
-    return productos.map(p => this.toDTO(p));
+    return this.toDTO(producto);
   }
 
-  findById(id) {
-    const producto = this.productRepository.findById(id);
-    return producto ? this.toDTO(producto) : null;
+  async create(producto) {
+    const { nombre, precioBase, descripcion, idCategoria } = producto;
+
+    if (!nombre || typeof precioBase !== "number" || !idCategoria) {
+      throw new ValidationError('Faltan campos requeridos o son inválidos');
+    }
+  
+    const existente = await this.productRepository.findByName(nombre);
+    if (existente) {
+      throw new ConflictError(`Ya existe un producto con el nombre ${nombre}`);
+    }
+
+    const categoria = await this.categoryRepository.findById(idCategoria);
+    if (!categoria) {
+      throw new NotFoundError(`Categoría con id ${idCategoria} no encontrada`);
+    }
+  
+    const nuevo = new Producto(nombre, precioBase);
+    nuevo.setCategoria(categoria);
+
+    if (descripcion) {
+      nuevo.setDescripcion(descripcion);
+    }
+
+    const productoGuardado = await this.productRepository.save(nuevo);
+    return this.toDTO(productoGuardado);
   }
 
-  create(producto) {
-    const { nombre, precioBase, descripcion } = producto;
-  
-    const existente = this.productRepository.findByName(nombre);
-    if (existente) return null;
-  
-    const nuevo = new Producto(nombre, precioBase, descripcion);
-  
-    this.productRepository.save(nuevo);
-    return this.toDTO(nuevo);
-  }
-
-  delete(id) {
-    return this.productRepository.deleteById(id);
+  async delete(id) {
+    const deleted = await this.productRepository.deleteById(id);
+    if (!deleted) {
+      throw new NotFoundError(`Producto con id ${id} no encontrado`);
+    }
+    return deleted;
   }
 
   toDTO(producto) {
@@ -40,7 +61,9 @@ export class ProductService {
       id: producto.id,
       nombre: producto.nombre,
       precioBase: producto.precioBase,
-      descripcion: producto.descripcion
+      descripcion: producto.descripcion,
+      categoria: producto.categoria?.nombre,
+      categoriaId: producto.categoria?.id
     };
   }
 }

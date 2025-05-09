@@ -1,33 +1,48 @@
+import { ProductoModel } from '../schemas/productoSchema.js';
+
 export class ProductRepository {
     constructor() {
-      this.productos = [];
-      this.nextId = 1;
+        this.model = ProductoModel;
     }
   
-    findAll() {
-      return this.productos;
+    async findAll(filters = {}) {
+        const query = {};
+        if (filters.idCategoria) {
+            query.categoria = filters.idCategoria;
+        }
+        if (filters.precioGt) {
+            query.precioBase = { $gt: Number(filters.precioGt) };
+        }
+        if (filters.precioLt) {
+            query.precioBase = { $lt: Number(filters.precioLt) };
+        }
+        return await this.model.find(query).populate('categoria');
     }
   
-    findById(id) {
-      return this.productos.find(p => p.id === id);
+    async findById(id) {
+        return await this.model.findById(id).populate('categoria');
     }
   
-    findByName(nombre) {
-      return this.productos.find(p => p.nombre === nombre);
+    async findByName(nombre) {
+        return await this.model.findOne({ nombre }).populate('categoria');
     }
   
-    save(producto) {
-      producto.id = this.nextId++;
-      this.productos.push(producto);
-      return producto;
+    async save(producto) {
+        const query = producto.id ? { _id: producto.id } : { _id: new this.model()._id };
+        return await this.model.findOneAndUpdate(
+            query,
+            producto,
+            { 
+                new: true, 
+                runValidators: true,
+                upsert: true
+            }
+        ).populate('categoria');
     }
   
-    deleteById(id) {
-      const index = this.productos.findIndex(p => p.id === id);
-      if (index === -1) return false;
-      this.productos.splice(index, 1);
-      return true;
+    async deleteById(id) {
+        const resultado = await this.model.findByIdAndDelete(id);
+        return resultado !== null;
     }
-  
-  }
+}
   

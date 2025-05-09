@@ -1,44 +1,39 @@
 export class Producto {
-    #id
-    #nombre
-    #precioBase
-    #descripcion
-
-    constructor(nombre, precioBase, descripcion) {
-        this.#nombre = nombre
-        this.#descripcion = descripcion
-        this.#precioBase = precioBase
+    categoria = null;
+    cantidad = null; //No es persistente porque no está definido en el schema
+    
+    constructor(nombre, precioBase) {
+        this.nombre = nombre;
+        this.precioBase = precioBase;
     }
 
-    get nombre() {
-        return this.#nombre
+    setDescripcion(descripcion) {
+        this.descripcion = descripcion;
     }
 
-    get precioBase() {
-        return this.#precioBase
+    setCategoria(categoria) {
+        // Si ya tenía una categoría, la removemos de la lista de productos de esa categoría
+        if (this.categoria && this.categoria !== categoria) {
+            this.categoria.removerProducto(this);
+        }
+        
+        this.categoria = categoria;
+        
+        // Si la nueva categoría no es null, agregamos este producto a su lista
+        if (categoria && !categoria.getProductos().includes(this)) {
+            categoria.agregarProducto(this);
+        }
     }
 
-    get descripcion() {
-        return this.#descripcion
+    getCategoria() {
+        return this.categoria;
     }
 
-    set descripcion(descripcion) {
-        this.#descripcion = descripcion
+    tuPrecioEsMayorQue(precio) {
+        return this.precioBase > precio;
     }
 
-    set nombre(nombre) {
-        this.#nombre = nombre
-    }
-
-    set precioBase(precio) {
-        this.#precioBase = precio
-    }
-
-    set id(id) {
-        this.#id = id
-    }
-
-    get id() {
-        return this.#id
+    tuPrecioEsMenorQue(precio) {
+        return this.precioBase < precio;
     }
 }

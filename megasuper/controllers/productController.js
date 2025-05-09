@@ -4,45 +4,54 @@ export class ProductController {
       this.productService = productService;
     }
   
-    findAll = (req, res) => {
-      const { price_lt } = req.query;
-      const productos = this.productService.findAll(price_lt);
-      res.json(productos);
-    };
-  
-    findById = (req, res) => {
-      const id = Number(req.params.id);
-      const producto = this.productService.findById(id);
-      if (!producto) {
-        return res.status(404).json({ error: "Producto no encontrado" });
+    async findAll(req, res, next) {
+      try {
+        const filters = {
+          idCategoria: req.query.idCategoria,
+          precioGt: req.query.precioGt,
+          precioLt: req.query.precioLt
+        };
+        const productos = await this.productService.findAll(filters);
+        res.json(productos);
+      } catch (error) {
+        next(error);
       }
-      res.json(producto);
-    };
+    }
   
-    create = (req, res) => {
-      const producto = req.body;
-      const { nombre, precioBase, descripcion } = producto;
-    
-      if (!nombre || !descripcion || typeof precioBase !== "number") {
-        return res.status(400).json({ error: "Datos inválidos" });
+    async findById(req, res, next) {
+      try {
+        const producto = await this.productService.findById(req.params.id);
+        res.json(producto);
+      } catch (error) {
+        next(error);
       }
-    
-      const nuevo = this.productService.create(producto);
-      if (!nuevo) {
-        return res.status(409).json({ error: "Producto ya existente" });
-      }
-    
-      res.status(201).json(nuevo);
-    };
+    }
   
-    delete = (req, res) => {
-      const id = Number(req.params.id);
-      const eliminado = this.productService.delete(id);
-      if (!eliminado) {
-        return res.status(404).json({ error: "Producto no encontrado" });
+    async create(req, res, next) {
+      try {
+        const nuevo = await this.productService.create(req.body);
+        res.status(201).json(nuevo);
+      } catch (error) {
+        next(error);
       }
-      res.status(204).send();
-    };
+    }
   
-  }
+    async delete(req, res, next) {
+      try {
+        await this.productService.delete(req.params.id);
+        res.status(204).send();
+      } catch (error) {
+        next(error);
+      }
+    }
+
+    async update(req, res, next) {
+      try {
+        const actualizado = await this.productService.update(req.params.id, req.body);
+        res.json(actualizado);
+      } catch (error) {
+        next(error);
+      }
+    }
+}
   

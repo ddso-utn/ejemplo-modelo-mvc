@@ -1,5 +1,6 @@
 import express from "express";
-import { registerProductRoutes } from "./megasuper/routes/productRoutes.js";
+import { configureRoutes } from "../routes/index.js";
+import { errorHandler } from "../middlewares/errorHandler.js";
 
 export class Server {
   #controllers = {};
@@ -28,7 +29,18 @@ export class Server {
   }
 
   configureRoutes() {
-    registerProductRoutes(this.app, this.getController.bind(this));
+    configureRoutes(this.app, this.getController.bind(this));
+    
+    // Middleware para manejar rutas no encontradas
+    this.#app.use((req, res, next) => {
+      res.status(404).json({
+        status: 'fail',
+        message: "La ruta solicitada no existe"
+      });
+    });
+
+    // Middleware global de manejo de errores
+    this.#app.use(errorHandler);
   }
 
   launch() {
