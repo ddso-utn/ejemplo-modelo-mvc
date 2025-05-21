@@ -3,7 +3,7 @@ export class ProductController {
     this.productService = productService
   }
 
-  async findAll(req, res) {
+  async findAll(req, res, asdf) {
     const { price_lt, page = 1, limit = 10 } = req.query
     const productosPaginados = await this.productService.findAll({
       price_lt,
@@ -34,13 +34,12 @@ export class ProductController {
     const nuevo = await this.productService.create(
       nombre,
       precioBase,
-      descripcion
+      descripcion,
     )
     console.log(nuevo)
     if (!nuevo) {
       return res.status(409).json({ error: "Producto ya existente" })
     }
-
     res.status(201).json(nuevo)
   }
 

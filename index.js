@@ -10,7 +10,7 @@ import { ProductService } from "./megasuper/services/productService.js"
 import { ProductController } from "./megasuper/controllers/productController.js"
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.SERVER_PORT || 3000
 const server = new Server(app, port)
 
 // Configuración de dependencias
