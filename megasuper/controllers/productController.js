@@ -3,7 +3,7 @@ export class ProductController {
     this.productService = productService
   }
 
-  async findAll(req, res) {
+  async findAll(req, res, asdf) {
     const { price_lt, page = 1, limit = 10 } = req.query
     const productosPaginados = await this.productService.findAll({
       price_lt,
